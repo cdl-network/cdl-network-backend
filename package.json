@@ -29,6 +29,7 @@
   "homepage": "https://github.com/VickTorry/cdlnetworkllc#readme",
   "dependencies": {
     "dotenv": "^17.2.3",
+    "joi": "^18.0.1",
     "zod": "^4.1.12"
   },
   "devDependencies": {
