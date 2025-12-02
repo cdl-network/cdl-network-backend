@@ -6,7 +6,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "dev": "vercel dev",
+    "dev": "echo \"No tests yet\"",
     "start": "vercel dev",
     "test": "echo \"No tests yet\""
   },

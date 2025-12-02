@@ -3,6 +3,11 @@ import Joi from 'joi';
 
 const baseString = Joi.string().trim();
 
+// ------------------------------------------------------
+// DRIVER LEAD SCHEMA
+// New quiz uses: cdl_class, years_exp, truck_type_preference, notes, contact info.
+// Legacy fields (state, availability, preferred_region) remain OPTIONAL.
+// ------------------------------------------------------
 const driverSchema = Joi.object({
   lead_type: Joi.string().valid('driver').required(),
 
@@ -10,20 +15,32 @@ const driverSchema = Joi.object({
   phone: baseString.min(5).max(50).required(),
   email: baseString.email().max(200).required(),
 
-  cdl_class: Joi.string().valid('yes', 'no').required(),
-  state: baseString.min(2).max(50).required(),
+  // NEW + REQUIRED
+  // Matches HubSpot: has_cdl, training, no_cdl
+  cdl_class: Joi.string()
+    .valid('has_cdl', 'training', 'no_cdl')
+    .required(),
 
-  years_exp: Joi.number().integer().min(0).max(80).required(),
+  // OPTIONAL (quiz doesn't use it for now, but we keep it for future)
+  state: baseString.max(50).allow('', null),
 
-  availability: Joi.string()
-    .valid('immediate', '2_weeks', '1_month')
-    .allow(null, ''),
+  // REQUIRED in new quiz (0–100)
+  years_exp: Joi.number().integer().min(0).max(100).required(),
 
+  // LEGACY fields — optional for compatibility
+  availability: baseString.allow('', null),
   preferred_region: baseString.max(200).allow('', null),
+
+  // truck types (comma-separated string from frontend)
   truck_type_preference: baseString.max(200).allow('', null),
+
+  // used for CDL notes OR non-CDL job description
   notes: baseString.max(2000).allow('', null),
 });
 
+// ------------------------------------------------------
+// CARRIER LEAD SCHEMA (unchanged)
+// ------------------------------------------------------
 const carrierSchema = Joi.object({
   lead_type: Joi.string().valid('carrier').required(),
 
@@ -40,6 +57,9 @@ const carrierSchema = Joi.object({
   hiring_needs: baseString.max(2000).required(),
 });
 
+// ------------------------------------------------------
+// MAIN VALIDATOR
+// ------------------------------------------------------
 export function validateLead(payload) {
   let schema;
 
@@ -50,7 +70,9 @@ export function validateLead(payload) {
   } else {
     const err = new Error('lead_type must be driver or carrier');
     err.code = 'VALIDATION';
-    err.details = [{ message: 'lead_type must be driver or carrier', path: ['lead_type'] }];
+    err.details = [
+      { message: 'lead_type must be driver or carrier', path: ['lead_type'] },
+    ];
     throw err;
   }
 

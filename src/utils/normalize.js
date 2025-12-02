@@ -1,7 +1,3 @@
-// src/utils/normalize.js
-
-// Simple sentence case: first letter upper, rest lower.
-// Only use this for SHORT descriptor fields (region, lane type, etc.)
 export function sentenceCase(str) {
   if (!str) return '';
   const s = String(str).trim();
@@ -9,7 +5,6 @@ export function sentenceCase(str) {
   return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 }
 
-// Title case for names / company names.
 export function titleCase(str) {
   if (!str) return '';
   return String(str)
@@ -20,42 +15,50 @@ export function titleCase(str) {
     .join(' ');
 }
 
-// Strip undefined / null / empty string keys.
 export function cleanObject(obj) {
   return Object.fromEntries(
     Object.entries(obj).filter(([ , v ]) => {
       if (v === undefined || v === null) return false;
-      if (typeof v === 'string' && v.trim() === '') return false; // <--- add this
+      if (typeof v === 'string' && v.trim() === '') return false;
       return true;
     })
   );
 }
 
-// Build additional_details for DRIVER leads.
-// Short fields go through sentenceCase, long free text is kept raw (trimmed)
-// so we don't destroy acronyms like SAP / OTR, etc.
 export function buildDriverDetails(data) {
   const parts = [];
 
+  // CDL status (new quiz)
+  if (data.cdl_class) {
+    const cdlText =
+      data.cdl_class === 'has_cdl'
+        ? 'Has CDL-A'
+        : data.cdl_class === 'training'
+        ? 'Still in CDL training'
+        : 'Looking for non-CDL position';
+
+    parts.push(`CDL status: ${cdlText}`);
+  }
+
+  // Truck types (new quiz – comma joined string)
+  if (data.truck_type_preference) {
+    parts.push(`Truck types: ${data.truck_type_preference}`);
+  }
+
+  // Legacy but harmless if empty
   if (data.preferred_region) {
     parts.push(`Preferred region: ${sentenceCase(data.preferred_region)}`);
   }
 
-  if (data.truck_type_preference) {
-    parts.push(
-      `Truck type preference: ${sentenceCase(data.truck_type_preference)}`
-    );
-  }
-
+  // Notes (includes non-CDL position description)
   if (data.notes) {
-    // keep original wording, just trim
     parts.push(`Notes: ${String(data.notes).trim()}`);
   }
 
   return parts.join('\n');
 }
 
-// Build additional_details for CARRIER leads.
+
 export function buildCarrierDetails(data) {
   const parts = [];
 
@@ -64,7 +67,6 @@ export function buildCarrierDetails(data) {
   }
 
   if (data.hiring_needs) {
-    // keep original wording, just trim
     parts.push(`Hiring needs: ${String(data.hiring_needs).trim()}`);
   }
 
