@@ -16,7 +16,7 @@ export async function pushToHubSpot(p) {
 
     lead_type: p.lead_type,          // custom property in HubSpot
     cdl_class: p.cdl_class,          // custom
-    years_exp: p.years_exp,          // custom (number)
+    cdl_experience_level: p.years_exp,          // custom 
     availability: p.availability,    // custom dropdown
 
     fleet_size: p.fleet_size,        // custom dropdown (carriers)

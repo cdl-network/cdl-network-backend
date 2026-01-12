@@ -25,7 +25,11 @@ const driverSchema = Joi.object({
   state: baseString.max(50).allow('', null),
 
   // REQUIRED in new quiz (0–100)
-  years_exp: Joi.number().integer().min(0).max(100).required(),
+  years_exp: Joi.when('cdl_class', {
+  is: 'has_cdl',
+  then: Joi.string().valid('0_1', '1_3', '3_plus').required(),
+  otherwise: Joi.string().allow('').optional(),
+}),
 
   // LEGACY fields — optional for compatibility
   availability: baseString.allow('', null),
