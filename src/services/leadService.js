@@ -38,6 +38,9 @@ export async function createLead(rawPayload, meta = {}) {
     contactProps = {
       ...common,
 
+      scid: data.scid || undefined,
+
+
       // REQUIRED: matches HubSpot dropdown
       cdl_class: data.cdl_class, // has_cdl / training / no_cdl
 
@@ -45,7 +48,7 @@ export async function createLead(rawPayload, meta = {}) {
       state: data.state ? data.state.trim().toUpperCase() : undefined,
 
       // REQUIRED in new quiz (0–100)
-      years_exp: data.years_exp,
+      cdl_experience_level: data.years_exp,
 
       // OPTIONAL (legacy)
       availability: data.availability || undefined,
@@ -65,6 +68,7 @@ export async function createLead(rawPayload, meta = {}) {
   else {
     contactProps = {
       ...common,
+      scid: data.scid || undefined,
       company: titleCase(data.company_name),
       fleet_size: data.fleet_size,
       additional_details: buildCarrierDetails(data),
