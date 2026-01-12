@@ -16,11 +16,12 @@ export async function pushToHubSpot(p) {
 
     lead_type: p.lead_type,          // custom property in HubSpot
     cdl_class: p.cdl_class,          // custom
-    cdl_experience_level: p.years_exp,          // custom 
+    cdl_experience_level: p.cdl_experience_level,          // custom 
     availability: p.availability,    // custom dropdown
 
     fleet_size: p.fleet_size,        // custom dropdown (carriers)
     additional_details: p.additional_details, // custom multi-line text
+    scid: p.scid,
   });
 
   const payload = { properties };

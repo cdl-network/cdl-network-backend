@@ -14,6 +14,7 @@ const driverSchema = Joi.object({
   full_name: baseString.min(2).max(200).required(),
   phone: baseString.min(5).max(50).required(),
   email: baseString.email().max(200).required(),
+  scid: baseString.max(200).allow('', null),
 
   // NEW + REQUIRED
   // Matches HubSpot: has_cdl, training, no_cdl
@@ -52,6 +53,7 @@ const carrierSchema = Joi.object({
   company_name: baseString.min(1).max(200).required(),
   phone: baseString.min(5).max(50).required(),
   email: baseString.email().max(200).required(),
+  scid: baseString.max(200).allow('', null),
 
   fleet_size: Joi.string()
     .valid('1_10_trucks', '11_50_trucks', '51_200_trucks', '200_plus_trucks')
