@@ -3,7 +3,8 @@
 // If you want to also allow the naked domain, add it here:
 const ALLOWED_ORIGINS = [
   'https://www.cdlnetworkllc.com',
-  // 'https://cdlnetworkllc.com',
+  'https://cdlnetworkllc.com',
+  'https://cdl-network-frontend.vercel.app',
 ];
 
 export function withCors(handler) {
