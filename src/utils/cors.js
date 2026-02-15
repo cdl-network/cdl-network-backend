@@ -12,8 +12,10 @@ export function withCors(handler) {
     const origin = req.headers.origin;
 
     // Allow server-to-server calls (no Origin header), and browser calls only from allowed origins
-    const isAllowedOrigin =
-      !origin || ALLOWED_ORIGINS.includes(origin);
+   const isAllowedOrigin =
+  !origin ||
+  ALLOWED_ORIGINS.includes(origin) ||
+  origin.endsWith(".vercel.app");
 
     if (!isAllowedOrigin) {
       return res.status(403).json({ error: 'Forbidden' });
